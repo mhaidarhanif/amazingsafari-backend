@@ -1,6 +1,8 @@
 {
+  "name": "amazingsafari-backend",
   "scripts": {
-    "dev": "bun run --hot src/index.ts"
+    "dev": "bun run --hot src/index.ts",
+    "start": "bun run src/index.ts"
   },
   "dependencies": {
     "hono": "^4.4.5"
