@@ -2,7 +2,8 @@
   "name": "amazingsafari-backend",
   "scripts": {
     "dev": "bun run --hot src/index.ts",
-    "start": "bun run src/index.ts"
+    "start": "bun run src/index.ts",
+    "generate": "prisma generate"
   },
   "dependencies": {
     "hono": "^4.4.5"

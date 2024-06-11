@@ -1,0 +1,21 @@
+services:
+  backend:
+    image: amazingsafari-backend
+    build:
+      context: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - database
+
+  database:
+    image: postgres:alpine
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    env_file:
+      - path: .env
+
+volumes:
+  pgdata:
