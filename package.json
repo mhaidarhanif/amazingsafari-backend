@@ -6,6 +6,7 @@
     "generate": "prisma generate"
   },
   "dependencies": {
+    "@prisma/client": "5.15.0",
     "hono": "^4.4.5"
   },
   "devDependencies": {
