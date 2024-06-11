@@ -1,0 +1,20 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id          String   @id @default(cuid()) // abc123xyz456
+  slug        String // head-panda-cushion
+  name        String // Head Panda Cushion
+  imageURL    String // https://example.com/head-panda-cushion-1686803573.jpg
+  price       Int // 115000
+  description String // Tempat perangkat/tas mini kepala Panda
+  sku         String // H11XXX003305
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
