@@ -3,6 +3,7 @@
   "scripts": {
     "dev": "bun run --hot src/index.ts",
     "start": "bun run src/index.ts",
+    "migrate:deploy": "prisma migrate deploy",
     "generate": "prisma generate",
     "seed": "prisma db seed",
     "studio": "prisma studio"
