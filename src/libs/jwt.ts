@@ -9,13 +9,15 @@ const getSecret = async () => {
 
 export const createToken = async (subject: string) => {
   const secret = await getSecret();
+  const payload = {};
+  const options = {
+    subject,
+    expiresIn: new TimeSpan(30, "d"),
+    includeIssuedTimestamp: true,
+  };
 
   try {
-    const jwt = await createJWT("HS256", secret, {
-      expiresIn: new TimeSpan(30, "d"),
-      subject,
-      includeIssuedTimestamp: true,
-    });
+    const jwt = await createJWT("HS256", secret, payload, options);
 
     return jwt;
   } catch (error) {
