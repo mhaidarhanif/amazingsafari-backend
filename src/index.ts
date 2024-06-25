@@ -5,6 +5,7 @@ import { zValidator } from "@hono/zod-validator";
 import { prisma } from "./libs/db";
 import { z } from "zod";
 import { hashPassword, verifyPassword } from "./libs/password";
+import { createToken } from "./libs/jwt";
 
 const app = new Hono();
 
@@ -82,7 +83,7 @@ app.post(
       });
 
       return c.json({
-        message: "New user has been registered",
+        message: "Register new user successful",
         newUser: {
           username: newUser.username,
         },
@@ -137,9 +138,17 @@ app.post(
       });
     }
 
-    // create token
+    const token = await createToken(foundUser.id);
 
-    return c.json(foundUser);
+    if (!token) {
+      c.status(400);
+      return c.json({ message: "Token failed to create" });
+    }
+
+    return c.json({
+      message: "Login successful",
+      token,
+    });
   }
 );
 
