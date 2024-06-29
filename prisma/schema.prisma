@@ -28,13 +28,43 @@ model Password {
 }
 
 model Product {
-  id          String   @id @default(cuid()) // abc123xyz456
-  slug        String   @unique // head-panda-cushion
-  name        String   @unique // Head Panda Cushion
+  id String @id @default(cuid()) // abc123xyz456
+
+  slug        String @unique // head-panda-cushion
+  name        String @unique // Head Panda Cushion
   imageURL    String // https://example.com/head-panda-cushion-1686803573.jpg
   price       Int // 115000
   description String // Tempat perangkat/tas mini kepala Panda
-  sku         String   @unique // H11XXX003305
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  sku         String @unique // H11XXX003305
+
+  orderItems OrderItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OrderItem {
+  id String @id @default(cuid())
+
+  quantity Int @default(1)
+
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
+
+  order   Order  @relation(fields: [orderId], references: [id])
+  orderId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Order {
+  id String @id @default(cuid())
+
+  status String @default("CART")
+
+  orderItems OrderItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
