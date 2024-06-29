@@ -1,13 +1,23 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { zValidator } from "@hono/zod-validator";
+import { type User } from "@prisma/client";
 
 import { prisma } from "./libs/db";
 import { z } from "zod";
 import { hashPassword, verifyPassword } from "./libs/password";
-import { createToken, validateToken } from "./libs/jwt";
+import { createToken } from "./libs/jwt";
+import { checkUserToken } from "./middlewares/check-user-token";
 
-const app = new Hono();
+type Bindings = {
+  TOKEN: string;
+};
+
+type Variables = {
+  user: User;
+};
+
+const app = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
 app.use("/*", cors());
 
@@ -152,38 +162,44 @@ app.post(
   }
 );
 
-app.get("/auth/me", async (c) => {
-  const authHeader = c.req.header("Authorization");
-  if (!authHeader) {
-    c.status(401);
-    return c.json({ message: "Not allowed" });
-  }
-
-  const token = authHeader.split(" ")[1];
-  if (!token) {
-    c.status(401);
-    return c.json({ message: "Token is required" });
-  }
-
-  const decodedToken = await validateToken(token);
-  if (!decodedToken) {
-    c.status(401);
-    return c.json({ message: "Token is invalid" });
-  }
-
-  const userId = decodedToken.subject;
-  if (!userId) {
-    c.status(401);
-    return c.json({ message: "User ID doesn't exist" });
-  }
-
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-  });
+app.get("/auth/me", checkUserToken(), async (c) => {
+  const user = c.get("user");
 
   return c.json({
     message: "User data",
     user,
+  });
+});
+
+app.get("/cart", checkUserToken(), async (c) => {
+  const user = c.get("user");
+
+  const existingOrderCart = await prisma.order.findFirst({
+    where: {
+      userId: user.id,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  if (!existingOrderCart) {
+    const newOrderCart = await prisma.order.create({
+      data: {
+        userId: user.id,
+      },
+    });
+    return c.json({
+      message: "Shopping cart data",
+      user,
+      cart: newOrderCart,
+    });
+  }
+
+  return c.json({
+    message: "Shopping cart data",
+    user,
+    cart: existingOrderCart,
   });
 });
 
