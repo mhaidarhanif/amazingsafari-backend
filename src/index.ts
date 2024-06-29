@@ -191,14 +191,12 @@ app.get("/cart", checkUserToken(), async (c) => {
     });
     return c.json({
       message: "Shopping cart data",
-      user,
       cart: newOrderCart,
     });
   }
 
   return c.json({
     message: "Shopping cart data",
-    user,
     cart: existingOrderCart,
   });
 });
