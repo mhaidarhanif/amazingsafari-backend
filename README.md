@@ -33,6 +33,15 @@ Auth:
 
 ## Getting Started
 
+Setup database:
+
+```sh
+docker compose up -d
+
+# or database only
+docker compose -f docker-compose.dev.yaml up -d
+```
+
 To install dependencies:
 
 ```sh
@@ -42,7 +51,7 @@ bun install
 To run:
 
 ```sh
-bun run dev
+bun dev
 ```
 
 Open <http://localhost:3000>
