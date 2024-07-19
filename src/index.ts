@@ -34,6 +34,20 @@ app.get("/products", async (c) => {
   return c.json(products);
 });
 
+app.get(
+  "/products/:slug",
+  zValidator("param", z.object({ slug: z.string() })),
+  async (c) => {
+    const { slug } = c.req.valid("param");
+
+    const products = await prisma.product.findMany({
+      where: { slug },
+    });
+
+    return c.json(products);
+  }
+);
+
 app.get("/users", async (c) => {
   const users = await prisma.user.findMany({
     select: {
