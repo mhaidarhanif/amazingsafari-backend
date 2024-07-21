@@ -40,11 +40,11 @@ app.get(
   async (c) => {
     const { slug } = c.req.valid("param");
 
-    const products = await prisma.product.findMany({
+    const product = await prisma.product.findUnique({
       where: { slug },
     });
 
-    return c.json(products);
+    return c.json(product);
   }
 );
 
