@@ -205,30 +205,24 @@ app.get("/auth/logout", checkUserToken(), async (c) => {
 app.get("/cart", checkUserToken(), async (c) => {
   const user = c.get("user");
 
-  const existingOrderCart = await prisma.cart.findFirst({
-    where: {
-      userId: user.id,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
+  const existingCart = await prisma.cart.findFirst({
+    where: { userId: user.id },
+    orderBy: { createdAt: "desc" },
   });
 
-  if (!existingOrderCart) {
-    const newOrderCart = await prisma.cart.create({
-      data: {
-        userId: user.id,
-      },
+  if (!existingCart) {
+    const newCart = await prisma.cart.create({
+      data: { userId: user.id },
     });
     return c.json({
       message: "Shopping cart data",
-      cart: newOrderCart,
+      cart: newCart,
     });
   }
 
   return c.json({
     message: "Shopping cart data",
-    cart: existingOrderCart,
+    cart: existingCart,
   });
 });
 
