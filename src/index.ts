@@ -1,7 +1,6 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { zValidator } from "@hono/zod-validator";
-import { type User } from "@prisma/client";
 
 import { prisma } from "./libs/db";
 import { z } from "zod";
@@ -14,7 +13,9 @@ type Bindings = {
 };
 
 type Variables = {
-  user: User;
+  user: {
+    id: string;
+  };
 };
 
 const app = new Hono<{ Bindings: Bindings; Variables: Variables }>();
@@ -204,7 +205,7 @@ app.get("/auth/logout", checkUserToken(), async (c) => {
 app.get("/cart", checkUserToken(), async (c) => {
   const user = c.get("user");
 
-  const existingOrderCart = await prisma.order.findFirst({
+  const existingOrderCart = await prisma.cart.findFirst({
     where: {
       userId: user.id,
     },
@@ -214,7 +215,7 @@ app.get("/cart", checkUserToken(), async (c) => {
   });
 
   if (!existingOrderCart) {
-    const newOrderCart = await prisma.order.create({
+    const newOrderCart = await prisma.cart.create({
       data: {
         userId: user.id,
       },
