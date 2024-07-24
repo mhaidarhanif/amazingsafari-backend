@@ -7,11 +7,11 @@ const getSecret = async () => {
   return uint8Array.buffer as ArrayBuffer;
 };
 
-export const createToken = async (subject: string) => {
+export const createToken = async (userId: string) => {
   const secret = await getSecret();
   const payload = {};
   const options = {
-    subject,
+    subject: userId,
     expiresIn: new TimeSpan(30, "d"),
     includeIssuedTimestamp: true,
   };
@@ -33,7 +33,7 @@ export const validateToken = async (token: string) => {
     const decodedToken = await validateJWT("HS256", secret, token);
     return decodedToken;
   } catch (error) {
-    console.error();
+    console.error(error);
     return null;
   }
 };

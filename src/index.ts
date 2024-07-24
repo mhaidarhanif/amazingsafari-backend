@@ -25,6 +25,8 @@ app.get("/", (c) => {
   return c.json({
     message: "Amazing Safari Backend API",
     products: "/products",
+    users: "/users",
+    auth: "/auth",
   });
 });
 
@@ -59,26 +61,30 @@ app.get("/users", async (c) => {
   return c.json(users);
 });
 
-app.get("/users/:username", async (c) => {
-  const username = c.req.param("username");
+app.get(
+  "/users/:username",
+  zValidator("param", z.object({ username: z.string() })),
+  async (c) => {
+    const { username } = c.req.valid("param");
 
-  const user = await prisma.user.findUnique({
-    where: { username },
-    select: {
-      id: true,
-      username: true,
-      createdAt: true,
-      updatedAt: true,
-    },
-  });
+    const user = await prisma.user.findUnique({
+      where: { username },
+      select: {
+        id: true,
+        username: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
 
-  if (!user) {
-    c.status(404);
-    c.json({ message: "User not found" });
+    if (!user) {
+      c.status(404);
+      c.json({ message: "User not found" });
+    }
+
+    return c.json(user);
   }
-
-  return c.json(user);
-});
+);
 
 app.post(
   "/auth/register",
@@ -133,9 +139,7 @@ app.post(
 
     const foundUser = await prisma.user.findUnique({
       where: { username: body.username },
-      include: {
-        password: true,
-      },
+      include: { password: { select: { hash: true } } },
     });
 
     if (!foundUser) {
@@ -179,9 +183,21 @@ app.post(
 app.get("/auth/me", checkUserToken(), async (c) => {
   const user = c.get("user");
 
+  const userData = await prisma.user.findUnique({
+    where: { id: user.id },
+  });
+
   return c.json({
     message: "User data",
-    user,
+    user: userData,
+  });
+});
+
+app.get("/auth/logout", checkUserToken(), async (c) => {
+  // Note: might be unnecessary since this is token-based auth
+  // We can just remove the token on the client or frontend
+  return c.json({
+    message: "Logout",
   });
 });
 

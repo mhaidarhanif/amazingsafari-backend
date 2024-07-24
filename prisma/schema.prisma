@@ -10,8 +10,9 @@ datasource db {
 model User {
   id String @id @default(cuid())
 
-  username String    @unique
-  email    String    @unique
+  username String @unique
+  email    String @unique
+
   password Password?
 
   orders Order[]

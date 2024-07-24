@@ -8,19 +8,23 @@ export const checkUserToken = () => {
     const authHeader = c.req.header("Authorization");
     if (!authHeader) {
       c.status(401);
-      return c.json({ message: "Not allowed" });
+      return c.json({
+        message: "Not allowed. Authorization header is required",
+      });
     }
 
+    // Authorization: Bearer
+    // Authorization: ["Bearer", "token"]
     const token = authHeader.split(" ")[1];
     if (!token) {
       c.status(401);
-      return c.json({ message: "Token is required" });
+      return c.json({ message: "Not allowed. Token is required" });
     }
 
     const decodedToken = await validateToken(token);
     if (!decodedToken) {
       c.status(401);
-      return c.json({ message: "Token is invalid" });
+      return c.json({ message: "Not allowed. Token is invalid" });
     }
 
     const userId = decodedToken.subject;
@@ -31,10 +35,7 @@ export const checkUserToken = () => {
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: {
-        id: true,
-        username: true,
-      },
+      select: { id: true },
     });
     if (!user) {
       c.status(404);
