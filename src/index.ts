@@ -208,12 +208,15 @@ app.get("/cart", checkUserToken(), async (c) => {
   const existingCart = await prisma.cart.findFirst({
     where: { userId: user.id },
     orderBy: { createdAt: "desc" },
+    include: { items: { include: { product: true } } },
   });
 
   if (!existingCart) {
     const newCart = await prisma.cart.create({
       data: { userId: user.id },
+      include: { items: { include: { product: true } } },
     });
+
     return c.json({
       message: "Shopping cart data",
       cart: newCart,
@@ -225,5 +228,53 @@ app.get("/cart", checkUserToken(), async (c) => {
     cart: existingCart,
   });
 });
+
+app.post(
+  "/cart/items",
+  checkUserToken(),
+  zValidator(
+    "json",
+    z.object({
+      productId: z.string(),
+      quantity: z.number().min(1),
+    })
+  ),
+  async (c) => {
+    const user = c.get("user");
+    const body = c.req.valid("json");
+
+    const existingCart = await prisma.cart.findFirst({
+      where: { userId: user.id },
+      orderBy: { createdAt: "desc" },
+    });
+
+    if (!existingCart) {
+      c.status(404);
+      return c.json({ message: "Shopping cart is unavailable" });
+    }
+
+    // FIXME: check existing product item before proceeding
+
+    const updatedCart = await prisma.cart.update({
+      where: { id: existingCart.id },
+      data: {
+        items: {
+          create: {
+            productId: body.productId,
+            quantity: body.quantity,
+          },
+        },
+      },
+      include: {
+        items: true,
+      },
+    });
+
+    return c.json({
+      message: "Product added to the cart",
+      cart: updatedCart,
+    });
+  }
+);
 
 export default app;
