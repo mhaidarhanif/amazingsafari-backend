@@ -18,7 +18,9 @@ type Variables = {
   };
 };
 
-const app = new Hono<{ Bindings: Bindings; Variables: Variables }>();
+export type HonoApp = { Bindings: Bindings; Variables: Variables };
+
+const app = new Hono<HonoApp>();
 
 app.use("/*", cors());
 
