@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@hono/zod-validator": "^0.2.2",
-    "@prisma/client": "^5.16.0",
+    "@prisma/client": "^5.17.0",
     "hono": "^4.4.5",
     "oslo": "^1.2.0",
     "zod": "^3.23.8"
@@ -24,7 +24,7 @@
   "devDependencies": {
     "@types/bun": "latest",
     "@types/node": "^20.14.2",
-    "prisma": "^5.16.0",
+    "prisma": "^5.17.0",
     "tsx": "^4.15.2",
     "typescript": "^5.4.5"
   }
