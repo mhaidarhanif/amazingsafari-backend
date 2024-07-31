@@ -5,11 +5,11 @@
     "start": "bun run src/index.ts",
     "docker:dev": "docker compose -f docker-compose.dev.yaml up -d",
     "docker:prod": "docker compose up -d",
-    "migrate:dev": "prisma migrate dev",
-    "migrate:deploy": "prisma migrate deploy",
-    "generate": "prisma generate",
-    "seed": "prisma db seed",
-    "studio": "prisma studio"
+    "db:migrate:dev": "prisma migrate dev",
+    "db:migrate:deploy": "prisma migrate deploy",
+    "db:gen": "prisma generate",
+    "db:seed": "prisma db seed",
+    "db:studio": "prisma studio"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
