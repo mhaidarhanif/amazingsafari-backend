@@ -16,9 +16,7 @@ export const cartRoute = new Hono()
       select: {
         id: true,
         items: {
-          select: {
-            quantity: true,
-            createdAt: true,
+          include: {
             product: {
               omit: {
                 description: true,
