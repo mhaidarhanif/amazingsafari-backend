@@ -23,7 +23,7 @@ export const authRoute = new Hono()
       const body = c.req.valid("json");
 
       try {
-        const newUser = await prisma.user.create({
+        const user = await prisma.user.create({
           data: {
             username: body.username,
             email: body.email,
@@ -33,14 +33,12 @@ export const authRoute = new Hono()
               },
             },
           },
-        });
-
-        return c.json({
-          message: "Register new user successful",
-          newUser: {
-            username: newUser.username,
+          select: {
+            username: true,
           },
         });
+
+        return c.json(user);
       } catch (error) {
         console.error(error);
         return c.json({ message: "Cannot register user" }, 400);
@@ -61,16 +59,16 @@ export const authRoute = new Hono()
     async (c) => {
       const body = c.req.valid("json");
 
-      const foundUser = await prisma.user.findUnique({
+      const user = await prisma.user.findUnique({
         where: { username: body.username },
         include: { password: { select: { hash: true } } },
       });
 
-      if (!foundUser) {
+      if (!user) {
         return c.json({ message: "Cannot login because user not found" }, 400);
       }
 
-      if (!foundUser?.password?.hash) {
+      if (!user?.password?.hash) {
         return c.json(
           { message: "Cannot login because user doesn't have a password" },
           400
@@ -78,7 +76,7 @@ export const authRoute = new Hono()
       }
 
       const validPassword = await verifyPassword(
-        foundUser.password.hash,
+        user.password.hash,
         body.password
       );
 
@@ -86,7 +84,7 @@ export const authRoute = new Hono()
         return c.json({ message: "Password incorrect" }, 400);
       }
 
-      const token = await createToken(foundUser.id);
+      const token = await createToken(user.id);
 
       if (!token) {
         return c.json({ message: "Authentication failed to process" }, 400);
@@ -95,8 +93,12 @@ export const authRoute = new Hono()
       setCookie(c, "token", token);
 
       return c.json({
-        message: "Login successful",
         token,
+        user: {
+          id: user.id,
+          username: user.username,
+          email: user.email,
+        },
       });
     }
   )
@@ -108,10 +110,7 @@ export const authRoute = new Hono()
       where: { id: user.id },
     });
 
-    return c.json({
-      message: "User data",
-      user: userData,
-    });
+    return c.json(userData);
   })
 
   .get("/logout", checkUserToken, async (c) => {

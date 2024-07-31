@@ -10,8 +10,7 @@ async function main() {
       update: product,
       create: product,
     });
-
-    console.log(`Product: ${newProductResult.name}`);
+    console.info(`🆕 Product: ${newProductResult.name}`);
   }
 }
 

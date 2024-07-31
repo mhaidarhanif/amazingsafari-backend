@@ -30,8 +30,12 @@ export const validateToken = async (token: string) => {
   const secret = await getSecret();
 
   try {
-    const decodedToken = await validateJWT("HS256", secret, token);
-    return decodedToken;
+    try {
+      const decodedToken = await validateJWT("HS256", secret, token);
+      return decodedToken;
+    } catch (error) {
+      console.info("Failed token validation attempt");
+    }
   } catch (error) {
     console.error(error);
     return null;

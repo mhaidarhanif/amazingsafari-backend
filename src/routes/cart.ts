@@ -37,16 +37,10 @@ export const cartRoute = new Hono()
         include: { items: { include: { product: true } } },
       });
 
-      return c.json({
-        message: "Shopping cart data",
-        cart: newCart,
-      });
+      return c.json(newCart);
     }
 
-    return c.json({
-      message: "Shopping cart data",
-      cart: existingCart,
-    });
+    return c.json(existingCart);
   })
 
   .post(
@@ -93,9 +87,6 @@ export const cartRoute = new Hono()
         },
       });
 
-      return c.json({
-        message: "Product added to the cart",
-        cart: updatedCart,
-      });
+      return c.json(updatedCart);
     }
   );
