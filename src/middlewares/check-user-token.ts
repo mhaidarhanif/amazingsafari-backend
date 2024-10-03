@@ -1,8 +1,8 @@
 import { createMiddleware } from "hono/factory";
+import { getCookie } from "hono/cookie";
 
 import { prisma } from "../libs/db";
 import { validateToken } from "../libs/token";
-import { getCookie } from "hono/cookie";
 
 type Env = {
   Variables: {

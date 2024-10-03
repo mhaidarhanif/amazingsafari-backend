@@ -65,6 +65,8 @@ export const cartRoute = new Hono()
       }
 
       // FIXME: check existing product item before proceeding
+      // Loop over for existing items in the Cart
+      // So we can increment that without creating a new CartItem
 
       const updatedCart = await prisma.cart.update({
         where: { id: existingCart.id },

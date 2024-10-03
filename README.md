@@ -36,16 +36,28 @@ Auth:
 Setup database:
 
 ```sh
-docker compose up -d
-
-# or database only
+# Run database only
 docker compose -f docker-compose.dev.yaml up -d
+
+docker compose up -d
 ```
 
 To install dependencies:
 
 ```sh
 bun install
+```
+
+Migrate database:
+
+```sh
+bun db:migrate:dev
+```
+
+Seed initial products:
+
+```sh
+bun db:seed
 ```
 
 To run:

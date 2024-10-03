@@ -1,4 +1,15 @@
-export const dataProducts = [
+import { Product } from "@prisma/client";
+
+export type DataProduct = {
+  slug: string;
+  name: string;
+  imageURL: string;
+  price: number;
+  description: string;
+  sku: string;
+};
+
+export const dataProducts: DataProduct[] = [
   {
     slug: "head-panda-cushion",
     name: "Head Panda Cushion",

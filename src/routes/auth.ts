@@ -14,15 +14,26 @@ export const authRoute = new Hono()
     zValidator(
       "json",
       z.object({
-        username: z.string(),
-        email: z.string(),
-        password: z.string(),
+        username: z.string().min(4).max(100),
+        email: z.string().email(),
+        password: z.string().min(8),
       })
     ),
     async (c) => {
       const body = c.req.valid("json");
 
       try {
+        const existingUser = await prisma.user.findUnique({
+          where: {
+            username: body.username,
+            email: body.email,
+          },
+        });
+
+        if (existingUser) {
+          return c.json({ message: "User already exists" }, 400);
+        }
+
         const user = await prisma.user.create({
           data: {
             username: body.username,
@@ -51,8 +62,8 @@ export const authRoute = new Hono()
     zValidator(
       "json",
       z.object({
-        username: z.string(),
-        password: z.string(),
+        username: z.string().min(4).max(100),
+        password: z.string().min(8),
       })
     ),
 
@@ -90,8 +101,10 @@ export const authRoute = new Hono()
         return c.json({ message: "Authentication failed to process" }, 400);
       }
 
+      // Response Header: Set-Cookie: "..."
       setCookie(c, "token", token);
 
+      // Response Body: { token: "..." }
       return c.json({
         token,
         user: {
@@ -108,6 +121,18 @@ export const authRoute = new Hono()
 
     const userData = await prisma.user.findUnique({
       where: { id: user.id },
+      include: {
+        carts: {
+          include: {
+            _count: {
+              select: { items: true },
+            },
+          },
+        },
+        // _count: {
+        //   select: { carts: true },
+        // },
+      },
     });
 
     return c.json(userData);
