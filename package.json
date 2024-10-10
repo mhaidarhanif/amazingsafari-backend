@@ -22,7 +22,8 @@
     "@scalar/hono-api-reference": "^0.5.152",
     "hono": "^4.4.5",
     "oslo": "^1.2.0",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "zod-prisma-types": "^3.1.8"
   },
   "devDependencies": {
     "@types/bun": "latest",

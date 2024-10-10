@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "strict": true,
+    "strictNullChecks": true,
     "jsx": "react-jsx",
     "jsxImportSource": "hono/jsx"
   }

@@ -1,5 +1,6 @@
 import { OpenAPIHono, createRoute, z } from "@hono/zod-openapi";
-import { configApp } from "../configs/app";
+
+import { configDocs, configGeneral } from "../configs/app";
 
 const tags = ["root"];
 
@@ -14,10 +15,8 @@ rootRoute.openapi(
   }),
   (c) => {
     return c.json({
-      ...configApp,
-      openapi: "/openapi.json",
-      swagger: "/swagger",
-      scalar: "/scalar",
+      ...configGeneral,
+      docs: configDocs,
       paths: ["/", "/hello", "/products", "/users", "/auth", "/cart"],
     });
   }

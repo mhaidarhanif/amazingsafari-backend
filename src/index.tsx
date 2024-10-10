@@ -9,7 +9,7 @@ import { productsRoute } from "./routes/products";
 import { usersRoute } from "./routes/users";
 import { authRoute } from "./routes/auth";
 import { cartRoute } from "./routes/cart";
-import { configApp } from "./configs/app";
+import { configDocs, configGeneral } from "./configs/app";
 import { apiReference } from "@scalar/hono-api-reference";
 
 const app = new OpenAPIHono();
@@ -21,17 +21,23 @@ const apiRoutes = app
   .route("/users", usersRoute)
   .route("/auth", authRoute)
   .route("/cart", cartRoute)
-  .doc31("/openapi.json", {
+  .doc(configDocs.openapi, {
     openapi: "3.1.0",
-    info: { ...configApp, version: "v1" },
+    info: { ...configGeneral, version: "v1" },
   })
-  .get("/swagger", swaggerUI({ url: "/openapi.json" }))
-  .get("/scalar", apiReference({ spec: { url: "/openapi.json" } }))
+  .get(configDocs.swagger, swaggerUI({ url: "/openapi.json" }))
+  .get(configDocs.docs, apiReference({ spec: { url: "/openapi.json" } }))
   .onError((err, c) => {
     return c.json({ code: 500, status: "error", message: err.message }, 500);
   })
   .use("*", logger())
-  .use("*", cors())
+  .use(
+    "*",
+    cors({
+      origin: "*",
+      allowMethods: ["HEAD", "GET", "POST", "PUT", "PATCH", "DELETE"],
+    })
+  )
   .get("/web", (c) => {
     return c.html(
       <html lang="en">
