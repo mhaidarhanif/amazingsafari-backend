@@ -15,29 +15,29 @@ import { Welcome } from "./routes/welcome";
 
 const app = new OpenAPIHono();
 
+// Configure Middlewares
+app.use("*", logger()).use("*", cors());
+
 // Configure API Routes
 const apiRoutes = app
-  .use("*", logger())
-  .use("*", cors())
   .basePath("/")
-  .get("/welcome", (c) => c.html(<Welcome />))
   .route("/", rootRoute)
   .route("/products", productsRoute)
   .route("/users", usersRoute)
   .route("/auth", authRoute)
-  .route("/cart", cartRoute)
-  .onError((err, c) => {
-    return c.json({ code: 500, status: "error", message: err.message }, 500);
-  });
+  .route("/cart", cartRoute);
 
-// Configure Plugins
-app
+apiRoutes
   .doc(configDocs.openapi, {
     openapi: "3.1.0",
     info: { ...configGeneral, version: "v1" },
   })
+  .get("/welcome", (c) => c.html(<Welcome />))
   .get(configDocs.swagger, swaggerUI({ url: "/openapi.json" }))
-  .get(configDocs.docs, apiReference({ spec: { url: "/openapi.json" } }));
+  .get(configDocs.docs, apiReference({ spec: { url: "/openapi.json" } }))
+  .onError((err, c) => {
+    return c.json({ code: 500, status: "error", message: err.message }, 500);
+  });
 
 console.info(`🐾 Amazing Safari Backend API
 
