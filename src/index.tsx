@@ -11,6 +11,7 @@ import { authRoute } from "./routes/auth";
 import { cartRoute } from "./routes/cart";
 import { configDocs, configGeneral } from "./configs/app";
 import { apiReference } from "@scalar/hono-api-reference";
+import { Welcome } from "./routes/welcome";
 
 const app = new OpenAPIHono();
 
@@ -19,6 +20,7 @@ const apiRoutes = app
   .use("*", logger())
   .use("*", cors())
   .basePath("/")
+  .get("/welcome", (c) => c.html(<Welcome />))
   .route("/", rootRoute)
   .route("/products", productsRoute)
   .route("/users", usersRoute)
@@ -35,26 +37,7 @@ app
     info: { ...configGeneral, version: "v1" },
   })
   .get(configDocs.swagger, swaggerUI({ url: "/openapi.json" }))
-  .get(configDocs.docs, apiReference({ spec: { url: "/openapi.json" } }))
-  .get("/web", (c) => {
-    return c.html(
-      <html lang="en">
-        <head>
-          <meta charset="UTF-8" />
-          <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1.0"
-          />
-          <title>Amazing Safari API</title>
-          <meta name="description" content="Web API about books" />
-          <script src="https://cdn.tailwindcss.com"></script>
-        </head>
-        <body>
-          <h1>Amazing Safari API</h1>
-        </body>
-      </html>
-    );
-  });
+  .get(configDocs.docs, apiReference({ spec: { url: "/openapi.json" } }));
 
 console.info(`🐾 Amazing Safari Backend API
 
