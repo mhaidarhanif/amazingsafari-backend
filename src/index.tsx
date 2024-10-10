@@ -14,30 +14,28 @@ import { apiReference } from "@scalar/hono-api-reference";
 
 const app = new OpenAPIHono();
 
+// Configure API Routes
 const apiRoutes = app
+  .use("*", logger())
+  .use("*", cors())
   .basePath("/")
   .route("/", rootRoute)
   .route("/products", productsRoute)
   .route("/users", usersRoute)
   .route("/auth", authRoute)
   .route("/cart", cartRoute)
+  .onError((err, c) => {
+    return c.json({ code: 500, status: "error", message: err.message }, 500);
+  });
+
+// Configure Plugins
+app
   .doc(configDocs.openapi, {
     openapi: "3.1.0",
     info: { ...configGeneral, version: "v1" },
   })
   .get(configDocs.swagger, swaggerUI({ url: "/openapi.json" }))
   .get(configDocs.docs, apiReference({ spec: { url: "/openapi.json" } }))
-  .onError((err, c) => {
-    return c.json({ code: 500, status: "error", message: err.message }, 500);
-  })
-  .use("*", logger())
-  .use(
-    "*",
-    cors({
-      origin: "*",
-      allowMethods: ["HEAD", "GET", "POST", "PUT", "PATCH", "DELETE"],
-    })
-  )
   .get("/web", (c) => {
     return c.html(
       <html lang="en">
@@ -47,7 +45,7 @@ const apiRoutes = app
             name="viewport"
             content="width=device-width, initial-scale=1.0"
           />
-          <title>Book Finder REST API</title>
+          <title>Amazing Safari API</title>
           <meta name="description" content="Web API about books" />
           <script src="https://cdn.tailwindcss.com"></script>
         </head>
