@@ -1,18 +1,48 @@
-import { zValidator } from "@hono/zod-validator";
-import { Hono } from "hono";
-import { z } from "zod";
+import { OpenAPIHono, createRoute, z } from "@hono/zod-openapi";
+import { configApp } from "../configs/app";
 
-export const rootRoute = new Hono()
-  .get("/", (c) => {
+const tags = ["root"];
+
+export const rootRoute = new OpenAPIHono();
+
+rootRoute.openapi(
+  createRoute({
+    method: "get",
+    path: "/",
+    tags,
+    responses: { 200: { description: "Root endpoint response" } },
+  }),
+  (c) => {
     return c.json({
-      message: "Amazing Safari Backend API",
+      ...configApp,
+      openapi: "/openapi.json",
+      swagger: "/swagger",
+      scalar: "/scalar",
+      paths: ["/", "/hello", "/products", "/users", "/auth", "/cart"],
     });
-  })
+  }
+);
 
-  .get("/hello", zValidator("query", z.object({ name: z.string() })), (c) => {
+rootRoute.openapi(
+  createRoute({
+    method: "get",
+    path: "/hello",
+    tags,
+    request: {
+      query: z.object({ name: z.string().optional() }),
+    },
+    responses: {
+      200: {
+        description: "Respond a message",
+        content: {
+          "application/json": { schema: z.object({ message: z.string() }) },
+        },
+      },
+    },
+  }),
+  (c) => {
     const { name } = c.req.valid("query");
-
-    return c.json({
-      message: `Hello, ${name}`,
-    });
-  });
+    if (!name) return c.json({ message: `Hello!` });
+    return c.json({ message: `Hello, ${name}!` });
+  }
+);
