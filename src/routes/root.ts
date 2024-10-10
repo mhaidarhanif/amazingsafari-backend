@@ -1,6 +1,6 @@
 import { OpenAPIHono, createRoute, z } from "@hono/zod-openapi";
 
-import { configDocs, configGeneral } from "../configs/app";
+import { configDocs, configEndpoints, configGeneral } from "../configs/app";
 
 const tags = ["root"];
 
@@ -17,7 +17,7 @@ rootRoute.openapi(
     return c.json({
       ...configGeneral,
       docs: configDocs,
-      paths: ["/", "/hello", "/products", "/users", "/auth", "/cart"],
+      endpoints: configEndpoints,
     });
   }
 );

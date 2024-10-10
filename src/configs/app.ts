@@ -8,3 +8,13 @@ export const configDocs = {
   swagger: "/swagger",
   openapi: "/openapi.json",
 };
+
+export const configEndpoints = [
+  "/",
+  "/hello",
+  "/welcome",
+  "/products",
+  "/users",
+  "/auth",
+  "/cart",
+];

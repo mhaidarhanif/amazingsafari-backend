@@ -32,9 +32,9 @@ apiRoutes
     openapi: "3.1.0",
     info: { ...configGeneral, version: "v1" },
   })
-  .get("/welcome", (c) => c.html(<Welcome />))
   .get(configDocs.swagger, swaggerUI({ url: "/openapi.json" }))
   .get(configDocs.docs, apiReference({ spec: { url: "/openapi.json" } }))
+  .get("/welcome", (c) => c.html(<Welcome />))
   .onError((err, c) => {
     return c.json({ code: 500, status: "error", message: err.message }, 500);
   });
