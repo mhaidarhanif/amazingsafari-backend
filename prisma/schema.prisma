@@ -12,6 +12,10 @@ generator zod {
   provider = "zod-prisma-types"
 }
 
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
 model User {
   id String @id @default(cuid())
 
