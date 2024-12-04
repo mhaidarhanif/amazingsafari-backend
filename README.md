@@ -33,48 +33,64 @@ Auth:
 
 ## Getting Started
 
+Copy and edit `.env` file:
+
+```sh
+cp .env.example .env
+```
+
 Setup database:
 
 ```sh
 # Run database only
-docker compose -f docker-compose.dev.yaml up -d
-
-docker compose up -d
+docker:up
 ```
 
-To install dependencies:
+Install dependencies:
 
 ```sh
 bun install
 ```
 
-Migrate database:
+Migrate database and generate Prisma Client:
 
 ```sh
-bun db:migrate:dev
+bun db:migrate
+# prisma migrate dev && prisma generate
 ```
 
 Seed initial products:
 
 ```sh
 bun db:seed
+# prisma db seed
 ```
 
-To run:
+Run development server:
 
 ```sh
 bun dev
+# bun run --hot src/index.ts
 ```
 
-Open <http://localhost:3000>
+Open <http://localhost:3000>.
 
-## Prisma Setup
+## Production
 
-warn You already have a .gitignore file. Don't forget to add `.env` in it to not commit any private information.
+Make sure the `DATABASE_URL` is configured in `.env` file for usage with Docker Compose.
 
-Next steps:
+Build the Docker image:
 
-1. Set the `DATABASE_URL` in the `.env` file to point to your existing database. If your database has no tables yet, read <https://pris.ly/d/getting-started>
-2. Set the provider of the datasource block in schema.prisma to match your database: postgresql, mysql, sqlite, sqlserver, mongodb or cockroachdb.
-3. Run prisma db pull to turn your database schema into a Prisma schema.
-4. Run prisma generate to generate the Prisma Client. You can then start querying your database.
+```sh
+bun docker:build
+# docker compose up -d --build
+```
+
+If only run the Docker container:
+
+```sh
+bun docker:up
+# docker compose up -d
+```
+
+Open <http://localhost:3000>.

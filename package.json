@@ -3,8 +3,8 @@
   "scripts": {
     "dev": "bun run --hot src/index.tsx",
     "start": "bun run src/index.tsx",
-    "docker": "docker compose -f docker-compose.dev.yaml up -d",
-    "docker:prod": "docker compose up -d",
+    "docker:up": "docker compose -f docker-compose.dev.yaml up -d",
+    "docker:up:prod": "docker compose -f docker-compose.prod.yaml up -d",
     "db:migrate": "prisma migrate dev",
     "db:migrate:deploy": "prisma migrate deploy",
     "db:gen": "prisma generate --no-hints",
