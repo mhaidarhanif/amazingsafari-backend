@@ -3,6 +3,8 @@
   "scripts": {
     "dev": "bun run --hot src/index.tsx",
     "start": "bun run src/index.tsx",
+    "b": "bun run build",
+    "build": "bun db:migrate:deploy && bun db:gen",
     "docker:up": "docker compose up -d",
     "docker:up:prod": "docker compose -f docker-compose.prod.yaml up -d",
     "db:migrate": "prisma migrate dev",
