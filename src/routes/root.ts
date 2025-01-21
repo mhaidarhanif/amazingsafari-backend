@@ -9,22 +9,6 @@ export const rootRoute = new OpenAPIHono();
 rootRoute.openapi(
   createRoute({
     method: "get",
-    path: "/",
-    tags,
-    responses: { 200: { description: "Root endpoint response" } },
-  }),
-  (c) => {
-    return c.json({
-      ...configGeneral,
-      docs: configDocs,
-      endpoints: configEndpoints,
-    });
-  }
-);
-
-rootRoute.openapi(
-  createRoute({
-    method: "get",
     path: "/hello",
     tags,
     request: {

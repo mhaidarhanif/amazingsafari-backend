@@ -13,14 +13,14 @@ type Env = {
 };
 
 export const checkUserToken = createMiddleware<Env>(async (c, next) => {
-  const tokenCookie = getCookie(c, "token");
-  const authHeader = c.req.header("Authorization");
+  const tokenCookie = getCookie(c, "token"); // Cookie Header
+  const authHeader = c.req.header("Authorization"); // Authorization Header
 
   // Get the token either from cookie or header
   const token = tokenCookie
     ? tokenCookie
     : authHeader
-    ? authHeader.split(" ")[1]
+    ? authHeader.split(" ")[1] // Authorization: Bearer <token>
     : null;
 
   if (!token) {

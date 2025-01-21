@@ -101,10 +101,13 @@ export const authRoute = new Hono()
         return c.json({ message: "Authentication failed to process" }, 400);
       }
 
-      // Response Header: Set-Cookie: "..."
+      // Response Header: Set-Cookie: <token>
       setCookie(c, "token", token);
 
-      // Response Body: { token: "..." }
+      // Response Header: Authorization: Bearer <token>
+      c.header("Authorization", `Bearer ${token}`);
+
+      // Response Body: { token: <token> }
       return c.json({
         token,
         user: {
@@ -116,6 +119,7 @@ export const authRoute = new Hono()
     }
   )
 
+  // Protected endpoiint with checkUserToken middleware
   .get("/me", checkUserToken, async (c) => {
     const user = c.get("user");
 

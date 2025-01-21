@@ -3,7 +3,7 @@
   "scripts": {
     "dev": "bun run --hot src/index.tsx",
     "start": "bun run src/index.tsx",
-    "docker:up": "docker compose -f docker-compose.dev.yaml up -d",
+    "docker:up": "docker compose up -d",
     "docker:up:prod": "docker compose -f docker-compose.prod.yaml up -d",
     "db:migrate": "prisma migrate dev",
     "db:migrate:deploy": "prisma migrate deploy",
@@ -18,7 +18,7 @@
     "@hono/swagger-ui": "^0.4.1",
     "@hono/zod-openapi": "^0.16.4",
     "@hono/zod-validator": "^0.2.2",
-    "@prisma/client": "^5.20.0",
+    "@prisma/client": "^6.2.1",
     "@scalar/hono-api-reference": "^0.5.152",
     "hono": "^4.4.5",
     "oslo": "^1.2.0",
@@ -28,7 +28,7 @@
   "devDependencies": {
     "@types/bun": "latest",
     "@types/node": "^20.14.2",
-    "prisma": "^5.20.0",
+    "prisma": "^6.2.1",
     "prisma-dbml-generator": "^0.12.0",
     "tsx": "^4.15.2",
     "typescript": "^5.4.5"
