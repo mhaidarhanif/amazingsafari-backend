@@ -7,6 +7,14 @@ const getSecret = async () => {
   return uint8Array.buffer as ArrayBuffer;
 };
 
+// EXPLANATION:
+// Using TextEncoder to encode the TOKEN_SECRET because in older Oslo.js (oslo/jwt)
+// the process of setting the secret was not straightforward,
+// it had to be made into an ArrayBuffer not a string,
+// the docs is still at https://oslo.js.org/reference/jwt
+// In the newest version, it's called @oslojs/jwt (with an @ symbol) but the docs is less clear
+// If it feels a bit complicated, just replace this using jsonwebtoken + @types/jsonwebtoken packages
+
 export const createToken = async (userId: string) => {
   const secret = await getSecret();
 
