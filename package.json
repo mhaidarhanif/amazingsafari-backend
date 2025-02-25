@@ -1,8 +1,8 @@
 {
   "name": "amazingsafari-backend",
   "scripts": {
-    "dev": "bun run --hot src/index.tsx",
-    "start": "bun run src/index.tsx",
+    "dev": "bun run --hot src/index.ts",
+    "start": "bun run src/index.ts",
     "b": "bun run build",
     "build": "bun install && bun db:migrate:deploy && bun db:gen",
     "docker:up": "docker compose up -d",
@@ -14,7 +14,7 @@
     "db:studio": "prisma studio"
   },
   "prisma": {
-    "seed": "tsx prisma/seed.ts"
+    "seed": "bun prisma/seed.ts"
   },
   "dependencies": {
     "@hono/swagger-ui": "^0.4.1",
@@ -32,7 +32,6 @@
     "@types/node": "^20.17.14",
     "prisma": "^6.2.1",
     "prisma-dbml-generator": "^0.12.0",
-    "tsx": "^4.19.2",
     "typescript": "^5.7.3"
   }
 }

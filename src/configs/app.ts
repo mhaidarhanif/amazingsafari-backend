@@ -18,7 +18,6 @@ export const configDocs = {
 export const configEndpoints = [
   "/",
   "/hello",
-  "/welcome",
   "/products",
   "/users",
   "/auth",

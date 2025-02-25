@@ -11,7 +11,6 @@ import { usersRoute } from "./routes/users";
 import { authRoute } from "./routes/auth";
 import { cartRoute } from "./routes/cart";
 import { configDocs, configGeneral } from "./configs/app";
-import { Welcome } from "./routes/welcome";
 
 const app = new OpenAPIHono();
 
@@ -34,7 +33,6 @@ apiRoutes
   })
   .get(configDocs.swagger, honoSwaggerUI({ url: "/openapi.json" }))
   .get("/", scalarHonoApiReference({ spec: { url: "/openapi.json" } }))
-  .get("/welcome", (c) => c.html(<Welcome />))
   .onError((err, c) => {
     return c.json({ code: 500, status: "error", message: err.message }, 500);
   });
